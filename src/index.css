@@ -632,15 +632,29 @@
       rgba(15, 23, 42, 0.9),
       transparent
     );
+    background-size: 100% 180%;
     box-shadow: 0 0 20px rgba(15, 23, 42, 0.4);
     transition:
-      transform 650ms ease,
-      opacity 650ms ease;
+      transform 650ms var(--motion-ease-premium),
+      opacity 650ms var(--motion-ease-premium);
   }
 
   .timeline-gradient-line.is-visible {
     transform: scaleY(1);
     opacity: 1;
+    animation: timeline-glow-breathe 3.2s var(--motion-ease-premium) infinite;
+  }
+
+  @keyframes timeline-glow-breathe {
+    0%,
+    100% {
+      box-shadow: 0 0 14px rgba(15, 23, 42, 0.26);
+      background-position: 50% 0%;
+    }
+    50% {
+      box-shadow: 0 0 24px rgba(15, 23, 42, 0.46);
+      background-position: 50% 100%;
+    }
   }
 
   .timeline-item {

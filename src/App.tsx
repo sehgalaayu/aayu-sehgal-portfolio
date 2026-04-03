@@ -325,6 +325,10 @@ export default function App() {
             aria-hidden="true"
             className="pointer-events-none absolute -right-16 top-10 h-[22rem] w-[22rem] rounded-full bg-[radial-gradient(circle,_rgba(3,15,23,0.10)_0%,_rgba(3,15,23,0.03)_42%,_transparent_72%)]"
           ></div>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute right-0 top-24 hidden md:block h-[20rem] w-[18rem] rounded-full bg-[radial-gradient(circle,_rgba(7,40,59,0.08)_0%,_rgba(7,40,59,0.02)_45%,_transparent_78%)]"
+          ></div>
           <motion.div
             className="relative z-10 max-w-2xl w-full"
             variants={containerVariants}

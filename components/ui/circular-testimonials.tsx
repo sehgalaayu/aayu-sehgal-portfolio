@@ -261,11 +261,12 @@ export const CircularTestimonials = ({
           {testimonials.map((testimonial, index) => {
             const isActiveHovered =
               index === activeIndex && hoveredIndex === index;
+            const isActiveCard = index === activeIndex;
 
             return (
               <div
                 key={testimonial.src}
-                className="testimonial-media"
+                className={`testimonial-media ${isActiveCard ? "is-active" : ""}`}
                 data-index={index}
                 style={getImageStyle(index)}
                 onMouseEnter={() => setHoveredIndex(index)}
@@ -432,6 +433,24 @@ export const CircularTestimonials = ({
           border-radius: 1.5rem;
           overflow: hidden;
         }
+        .testimonial-media.is-active::after {
+          content: "";
+          position: absolute;
+          top: -25%;
+          left: -55%;
+          width: 34%;
+          height: 160%;
+          transform: rotate(16deg);
+          pointer-events: none;
+          background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 255, 255, 0)
+          );
+          animation: active-sheen 6.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+          opacity: 0.42;
+        }
         .testimonial-media:hover .testimonial-image {
           transform: scale(1.05);
         }
@@ -466,6 +485,20 @@ export const CircularTestimonials = ({
           }
           to {
             transform: translateX(280%) rotate(18deg);
+          }
+        }
+        @keyframes active-sheen {
+          0%,
+          62% {
+            transform: translateX(-120%) rotate(16deg);
+            opacity: 0;
+          }
+          76% {
+            opacity: 0.42;
+          }
+          100% {
+            transform: translateX(310%) rotate(16deg);
+            opacity: 0;
           }
         }
         .testimonial-content {
