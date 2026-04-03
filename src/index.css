@@ -24,6 +24,10 @@
 }
 
 @layer utilities {
+  :root {
+    --motion-ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
   .all-unset {
     all: unset;
   }
@@ -51,9 +55,11 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.45),
       inset 0 -1px 0 rgba(255, 255, 255, 0.08);
     transition:
-      transform 220ms ease,
-      box-shadow 220ms ease,
-      filter 220ms ease;
+      transform 280ms var(--motion-ease-premium),
+      box-shadow 320ms var(--motion-ease-premium),
+      filter 280ms var(--motion-ease-premium),
+      background-color 280ms var(--motion-ease-premium),
+      opacity 280ms var(--motion-ease-premium);
   }
 
   .glass-button::before {
@@ -88,12 +94,11 @@
     z-index: 1;
     pointer-events: none;
     transition:
-      transform 220ms ease,
-      opacity 220ms ease;
+      transform 320ms var(--motion-ease-premium),
+      opacity 320ms var(--motion-ease-premium);
   }
 
   .glass-button-wrap:hover .glass-button {
-    transform: translateY(-2px);
     filter: brightness(1.05);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.58),
@@ -139,6 +144,10 @@
     color: #ffffff;
   }
 
+  .glass-button-primary.glass-button-wrap:hover .glass-button {
+    transform: translateY(-1px) scale(1.02);
+  }
+
   .glass-button-primary .glass-button-shadow {
     background: rgba(3, 15, 23, 0.34);
   }
@@ -153,8 +162,43 @@
     color: #051a24;
   }
 
+  .glass-button-secondary.glass-button-wrap:hover .glass-button {
+    transform: none;
+    filter: none;
+    background: linear-gradient(
+      140deg,
+      rgba(250, 250, 248, 0.9),
+      rgba(230, 236, 240, 0.72)
+    );
+    opacity: 0.98;
+  }
+
   .glass-button-secondary .glass-button-shadow {
     background: rgba(5, 26, 36, 0.08);
+  }
+
+  .hero-cta-wrap {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .hero-cta-wrap::before,
+  .hero-cta-wrap::after {
+    content: none !important;
+  }
+
+  .hero-cta-btn .glass-button-shadow {
+    inset: 4px;
+    filter: blur(8px);
+    opacity: 0.6;
+    transform: translateY(2px) scale(0.96);
+  }
+
+  .hero-cta-btn:hover .glass-button-shadow {
+    opacity: 0.78;
+    transform: translateY(3px) scale(0.98);
   }
 
   .editorial-accent {
@@ -321,22 +365,18 @@
 
   .reveal-up {
     opacity: 0;
-    transform: translateY(16px);
+    filter: blur(12px);
+    transform: translateY(24px);
     transition:
-      opacity 500ms ease,
-      transform 500ms ease;
+      opacity 900ms var(--motion-ease-premium),
+      filter 900ms var(--motion-ease-premium),
+      transform 900ms var(--motion-ease-premium);
   }
 
   .reveal-up.is-visible {
     opacity: 1;
+    filter: blur(0px);
     transform: translateY(0);
-  }
-
-  @media (min-width: 768px) {
-    .md\:is-visible-none {
-      opacity: 0;
-      transform: translateY(16px);
-    }
   }
 
   .quote-line {
@@ -355,6 +395,14 @@
   .experience-card {
     position: relative;
     box-shadow: 0 14px 34px rgba(3, 15, 23, 0.1);
+    transition:
+      transform 360ms ease,
+      box-shadow 360ms ease;
+  }
+
+  .experience-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 42px rgba(3, 15, 23, 0.16);
   }
 
   .experience-card::after {
@@ -369,6 +417,25 @@
   .stack-card {
     position: relative;
     box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
+    background-image:
+      radial-gradient(
+        circle at 16% 18%,
+        rgba(255, 255, 255, 0.07),
+        transparent 36%
+      ),
+      radial-gradient(
+        circle at 82% 72%,
+        rgba(255, 255, 255, 0.05),
+        transparent 40%
+      );
+    transition:
+      transform 360ms ease,
+      box-shadow 360ms ease;
+  }
+
+  .stack-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.24);
   }
 
   .stack-card::after {
@@ -383,8 +450,8 @@
   .cta-signature {
     position: relative;
     background: linear-gradient(130deg, #153447, #0a2333, #1f536f, #051a24);
-    background-size: 100% 100%;
-    animation: none;
+    background-size: 200% 200%;
+    animation: cta-gradient-move 12s ease infinite;
   }
 
   .cta-signature::before {
@@ -475,8 +542,14 @@
 
   .footer-link {
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: rgba(255, 255, 255, 0.62);
-    transition: color 220ms ease;
+    transition:
+      color 320ms ease,
+      transform 320ms ease,
+      opacity 320ms ease;
   }
 
   .footer-link::after {
@@ -494,9 +567,102 @@
 
   .footer-link:hover {
     color: rgba(255, 255, 255, 0.98);
+    transform: translateY(-1px) scale(1.08);
+    opacity: 1;
   }
 
   .footer-link:hover::after {
     transform: scaleX(1);
+  }
+
+  .logo-strip-item {
+    filter: none;
+    opacity: 1;
+    transition:
+      opacity 360ms ease,
+      transform 360ms ease;
+    will-change: transform;
+  }
+
+  .logo-strip-item:hover {
+    opacity: 1;
+    transform: translateY(-1px) scale(1.04);
+  }
+
+  .quote-mark-parallax {
+    animation: quote-mark-float 10s ease-in-out infinite;
+  }
+
+  @keyframes quote-mark-float {
+    0%,
+    100% {
+      transform: translate(-50%, 0);
+    }
+    50% {
+      transform: translate(-50%, 8px);
+    }
+  }
+
+  .quote-highlight-shimmer {
+    background-size: 220% 100%;
+    animation: quote-highlight-shine 6.2s linear infinite;
+  }
+
+  @keyframes quote-highlight-shine {
+    from {
+      background-position: 0% 50%;
+    }
+    to {
+      background-position: 200% 50%;
+    }
+  }
+
+  .timeline-gradient-line {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    transform-origin: top;
+    transform: scaleY(0);
+    opacity: 0.8;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(15, 23, 42, 0.9),
+      transparent
+    );
+    box-shadow: 0 0 20px rgba(15, 23, 42, 0.4);
+    transition:
+      transform 650ms ease,
+      opacity 650ms ease;
+  }
+
+  .timeline-gradient-line.is-visible {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+
+  .timeline-item {
+    transition:
+      transform 360ms ease,
+      background-color 360ms ease;
+  }
+
+  .timeline-item:hover {
+    transform: translateX(2px);
+  }
+
+  .timeline-dot {
+    transform: scale(0);
+    opacity: 0.2;
+    transition:
+      transform 420ms cubic-bezier(0.2, 1.2, 0.2, 1),
+      opacity 420ms ease;
+  }
+
+  .timeline-item.is-visible .timeline-dot {
+    transform: scale(1);
+    opacity: 1;
   }
 }

@@ -203,7 +203,7 @@ export const CircularTestimonials = ({
         transform: isHovered
           ? `${
               isEntered
-                ? `perspective(1000px) translateX(0px) translateY(${microOffsetY}px) scale(1.02) rotateX(2deg) rotateY(-2deg)`
+                ? `perspective(1000px) translateX(0px) translateY(${microOffsetY - 6}px) scale(1.03) rotateX(2deg) rotateY(-2deg)`
                 : `perspective(1000px) translateX(0px) translateY(${microOffsetY}px) scale(0.96) rotateX(2deg) rotateY(-2deg) translateY(22px)`
             }`
           : `${
@@ -211,7 +211,7 @@ export const CircularTestimonials = ({
                 ? `translateX(0px) translateY(${microOffsetY}px) scale(1) rotateY(0deg)`
                 : `translateX(0px) translateY(${microOffsetY}px) scale(0.96) rotateY(0deg) translateY(22px)`
             }`,
-        transition: "all 0.8s cubic-bezier(.4,2,.3,1)",
+        transition: "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
         transitionDelay: entryDelay,
       };
     }
@@ -223,7 +223,7 @@ export const CircularTestimonials = ({
         transform: isEntered
           ? `translateX(-${gap}px) translateY(-${maxStickUp + sideLiftOffset}px) scale(${sideScale}) rotateY(15deg)`
           : `translateX(-${gap}px) translateY(-${maxStickUp + sideLiftOffset}px) scale(${sideScale - 0.03}) rotateY(15deg) translateY(22px)`,
-        transition: "all 0.8s cubic-bezier(.4,2,.3,1)",
+        transition: "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
         transitionDelay: entryDelay,
       };
     }
@@ -235,7 +235,7 @@ export const CircularTestimonials = ({
         transform: isEntered
           ? `translateX(${gap}px) translateY(-${maxStickUp - sideLiftOffset}px) scale(${sideScale}) rotateY(-15deg)`
           : `translateX(${gap}px) translateY(-${maxStickUp - sideLiftOffset}px) scale(${sideScale - 0.03}) rotateY(-15deg) translateY(22px)`,
-        transition: "all 0.8s cubic-bezier(.4,2,.3,1)",
+        transition: "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
         transitionDelay: entryDelay,
       };
     }
@@ -243,7 +243,7 @@ export const CircularTestimonials = ({
       zIndex: 1,
       opacity: 0,
       pointerEvents: "none",
-      transition: "all 0.8s cubic-bezier(.4,2,.3,1)",
+      transition: "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
       transitionDelay: entryDelay,
     };
   }
@@ -414,6 +414,7 @@ export const CircularTestimonials = ({
           object-fit: cover;
           border-radius: 1.5rem;
           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+          transition: transform 680ms cubic-bezier(0.22, 1, 0.36, 1);
         }
         .testimonial-image.focus-center {
           object-position: center center;
@@ -430,6 +431,9 @@ export const CircularTestimonials = ({
           height: 100%;
           border-radius: 1.5rem;
           overflow: hidden;
+        }
+        .testimonial-media:hover .testimonial-image {
+          transform: scale(1.05);
         }
         .media-link {
           display: block;

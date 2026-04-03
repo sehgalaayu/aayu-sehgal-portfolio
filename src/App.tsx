@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { CircularTestimonials } from "@/components/ui/circular-testimonials";
 import { GlassButton } from "@/components/ui/glass-button";
+import { HoverPeek } from "@/components/ui/link-preview";
 import { LogoCloud } from "@/components/ui/logo-cloud-3";
 import { Navbar1 } from "@/components/ui/navbar-1";
+import { SpotlightCursor } from "@/components/ui/spotlight-cursor";
+import { blurFadeVariants, containerVariants } from "@/lib/animations";
+import { motion } from "framer-motion";
 import {
   ArrowUpRight,
   Github,
@@ -99,7 +103,7 @@ const logos = [
     alt: "Lovable AI Logo",
   },
   {
-    src: "/logos/open-ai-logo-png-transparent-background-chatgpt--68fadfca37.jpg",
+    src: "/logos/open-ai-logo-png-transparent-background-chatgpt--68fadfca37.png",
     alt: "OpenAI Logo",
   },
   {
@@ -159,7 +163,7 @@ const logos = [
 const quoteLines = [
   <>
     Scaling systems is not just about code, it is about understanding the{" "}
-    <span className="not-italic font-semibold bg-gradient-to-r from-cyan-200 via-white to-cyan-100 bg-clip-text text-transparent underline decoration-white/35 decoration-1 underline-offset-4">
+    <span className="quote-highlight-shimmer not-italic font-semibold bg-gradient-to-r from-cyan-200 via-white to-cyan-100 bg-clip-text text-transparent underline decoration-white/35 decoration-1 underline-offset-4">
       architecture of intent
     </span>
     .
@@ -182,7 +186,14 @@ const orderedProjects = [
   ...projects.filter((project) => !project.title.includes("Aajao")),
 ];
 
-const workTestimonials = orderedProjects.map((project) => ({
+const workTestimonials: Array<{
+  quote: string;
+  name: string;
+  designation: string;
+  src: string;
+  href: string;
+  imagePosition: "center" | "top" | "bottom";
+}> = orderedProjects.map((project) => ({
   quote: `Stack: ${project.tags.join(" • ")}`,
   name: project.title,
   designation: project.category,
@@ -200,7 +211,7 @@ const workTestimonials = orderedProjects.map((project) => ({
 function CountUp({
   value,
   suffix = "",
-  duration = 1200,
+  duration = 1000,
 }: {
   value: number;
   suffix?: string;
@@ -210,25 +221,20 @@ function CountUp({
   const ref = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
-    if (!ref.current) {
-      return;
-    }
+    if (!ref.current) return;
 
     let rafId = 0;
     let started = false;
 
     const run = () => {
       const start = performance.now();
-
       const tick = (now: number) => {
         const progress = Math.min((now - start) / duration, 1);
         setDisplayValue(Math.floor(progress * value));
-
         if (progress < 1) {
           rafId = requestAnimationFrame(tick);
         }
       };
-
       rafId = requestAnimationFrame(tick);
     };
 
@@ -242,21 +248,21 @@ function CountUp({
           }
         });
       },
-      { threshold: 0.45 },
+      { threshold: 0.3 },
     );
 
     observer.observe(ref.current);
-
     return () => {
       observer.disconnect();
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, [duration, value]);
 
   return (
-    <span ref={ref} className="text-4xl font-serif italic text-white">
+    <span
+      ref={ref}
+      className="text-3xl md:text-4xl font-semibold tracking-tight text-primary-ink"
+    >
       {displayValue}
       {suffix}
     </span>
@@ -286,8 +292,7 @@ export default function App() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
-          } else {
-            entry.target.classList.remove("is-visible");
+            observer.unobserve(entry.target);
           }
         });
       },
@@ -301,29 +306,45 @@ export default function App() {
 
   return (
     <div className="min-h-screen relative overflow-x-clip">
+      <SpotlightCursor
+        config={{
+          radius: 130,
+          brightness: 0.22,
+          color: "#59d6ff",
+        }}
+        className="mix-blend-screen"
+      />
+
       {/* Navigation */}
       <Navbar1 />
 
       <main className="pt-24 max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-12 lg:px-24">
         {/* Hero Section */}
-        <section className="relative py-16 md:py-24 md:pt-40 flex flex-col items-start">
+        <section className="relative py-12 md:py-24 md:pt-40 flex flex-col items-start">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -right-16 top-10 h-[22rem] w-[22rem] rounded-full bg-[radial-gradient(circle,_rgba(3,15,23,0.10)_0%,_rgba(3,15,23,0.03)_42%,_transparent_72%)]"
           ></div>
-          <div
-            data-reveal="hero-text"
-            className="reveal-up relative z-10 max-w-2xl w-full"
-            style={{ transitionDelay: "0.12s" }}
+          <motion.div
+            className="relative z-10 max-w-2xl w-full"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
           >
             <span className="font-mono text-[10px] tracking-[0.3em] text-primary-ink/60 mb-8 uppercase block">
               Full-Stack Developer — Building products people actually use
             </span>
-            <h1 className="text-[clamp(40px,11vw,96px)] font-medium tracking-tighter text-primary-ink mb-6 w-full leading-[0.95]">
+            <motion.h1
+              variants={blurFadeVariants}
+              className="text-[clamp(40px,11vw,96px)] font-medium tracking-tighter text-primary-ink mb-6 w-full leading-[0.95]"
+            >
               Ship <span className="editorial-accent">fast</span>. Build things{" "}
               <span className="editorial-accent">that last.</span>
-            </h1>
-            <div className="space-y-6 text-base leading-relaxed text-primary-ink/80 font-light mb-12">
+            </motion.h1>
+            <motion.div
+              variants={blurFadeVariants}
+              className="space-y-4 md:space-y-6 text-base leading-relaxed text-primary-ink/80 font-light mb-8 md:mb-12"
+            >
               <p>
                 I am a{" "}
                 <span className="editorial-accent font-normal text-primary-ink">
@@ -342,18 +363,14 @@ export default function App() {
                 CAPShield and Zynking, moving them from ideation to deployment
                 in record cycles.
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div
-            data-reveal="hero-cta"
-            className="reveal-up is-visible md:is-visible-none flex flex-wrap gap-4"
-            style={{ transitionDelay: "0.24s" }}
-          >
+          <div className="hero-cta-wrap relative z-20 flex flex-wrap gap-3 md:gap-4 bg-transparent">
             <GlassButton
               size="default"
               onClick={openEmail}
-              className="glass-button-primary"
+              className="glass-button-primary hero-cta-btn"
               contentClassName="flex items-center gap-3"
             >
               Get in touch
@@ -362,7 +379,7 @@ export default function App() {
             <GlassButton
               size="default"
               onClick={goToWork}
-              className="glass-button-secondary"
+              className="glass-button-secondary hero-cta-btn"
             >
               See my work
             </GlassButton>
@@ -371,16 +388,14 @@ export default function App() {
 
         {/* Marquee */}
         <section className="py-8 md:py-12 mb-20 md:mb-32 overflow-hidden">
+          <p className="mb-4 text-center text-[10px] font-mono uppercase tracking-[0.22em] text-primary-ink/55">
+            Tools and technologies I work with
+          </p>
           <LogoCloud logos={logos} className="py-2" />
         </section>
 
         {/* Selected Works */}
         <section id="work" className="mb-20 md:mb-32">
-          <div className="mb-10">
-            <div className="h-px w-full bg-gradient-to-r from-transparent via-primary-ink/20 to-transparent" />
-            <div className="mx-auto mt-3 h-6 w-[85%] bg-[radial-gradient(ellipse_at_center,rgba(5,26,36,0.06),transparent_72%)]" />
-          </div>
-
           <div
             data-reveal="work-heading"
             className="reveal-up flex flex-wrap items-baseline gap-3 md:gap-6 mb-10 md:mb-14"
@@ -391,7 +406,7 @@ export default function App() {
             </h2>
             <div className="h-px flex-1 bg-black/10"></div>
             <span className="hidden md:block text-[10px] uppercase tracking-[0.22em] text-primary-ink/45">
-              2024 ARCHIVE
+              2025 ARCHIVE
             </span>
           </div>
 
@@ -433,24 +448,29 @@ export default function App() {
       >
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-6 md:top-8 -translate-x-1/2 font-serif text-[110px] md:text-[240px] leading-none text-white/[0.04]"
+          className="quote-mark-parallax pointer-events-none absolute left-1/2 top-6 md:top-8 -translate-x-1/2 font-serif text-[110px] md:text-[240px] leading-none text-white/[0.04]"
         >
           &ldquo;
         </span>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 text-center relative z-10">
           <Quote className="w-10 h-10 md:w-12 md:h-12 text-white/15 mx-auto mb-8 md:mb-10" />
-          <blockquote className="text-xl md:text-3xl lg:text-4xl font-serif text-white leading-snug mb-12 md:mb-16 italic space-y-3 md:space-y-4">
+          <motion.blockquote
+            className="text-xl md:text-3xl lg:text-4xl font-serif text-white leading-snug mb-12 md:mb-16 italic space-y-3 md:space-y-4"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
             {quoteLines.map((line, idx) => (
-              <span
+              <motion.span
                 key={idx}
-                data-reveal="quote-line"
-                className="quote-line block"
-                style={{ transitionDelay: `${idx * 0.14}s` }}
+                className="block"
+                variants={blurFadeVariants}
               >
                 {line}
-              </span>
+              </motion.span>
             ))}
-          </blockquote>
+          </motion.blockquote>
           <cite className="not-italic block">
             <span className="text-white font-semibold block text-lg mb-3">
               Pitchmatter — Jan 2026 to Apr 2026
@@ -479,14 +499,21 @@ export default function App() {
             <h3 className="text-xs tracking-[0.2em] uppercase font-mono text-primary-ink/60 mb-12">
               Where I've Been
             </h3>
-            <div className="space-y-10 md:space-y-16">
+            <div className="relative space-y-10 md:space-y-16">
+              <div
+                data-reveal="timeline-rail"
+                className="timeline-gradient-line"
+                aria-hidden="true"
+              />
               {experience.map((item, idx) => (
                 <div
                   key={idx}
-                  className="relative pl-8 border-l border-primary-ink/10"
+                  data-reveal={`timeline-item-${idx}`}
+                  className="timeline-item reveal-up relative pl-8"
+                  style={{ transitionDelay: `${0.12 + idx * 0.1}s` }}
                 >
                   <div
-                    className={`absolute -left-1.5 top-0 w-3 h-3 rounded-full ${idx === 0 ? "bg-primary-ink" : "bg-primary-ink/20"}`}
+                    className={`timeline-dot absolute -left-1.5 top-0 w-3 h-3 rounded-full ${idx === 0 ? "bg-primary-ink" : "bg-primary-ink/35"}`}
                   ></div>
                   <span className="text-[10px] font-mono uppercase tracking-widest text-primary-ink/50 mb-3 block">
                     {item.period}
@@ -556,39 +583,70 @@ export default function App() {
           </div>
         </section>
 
-        {/* Achievements Strip */}
-        <section className="mb-20 md:mb-32 bg-primary-ink rounded-3xl md:rounded-full px-5 sm:px-8 md:px-12 py-8 md:py-12">
-          <div className="grid grid-cols-2 gap-8 md:flex md:flex-nowrap md:gap-14 md:justify-around md:items-center">
-            <div className="flex flex-col items-center md:items-start">
-              <CountUp value={400} suffix="+" duration={1300} />
-              <span className="text-[9px] font-mono uppercase tracking-widest text-white/50 mt-2">
-                Production Commits Shipped
-              </span>
+        {/* Impact Strip */}
+        <section
+          data-reveal="impact-strip"
+          className="reveal-up mb-20 md:mb-32 border-t border-b border-black/5 py-10"
+        >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 md:gap-y-0">
+            <div
+              data-reveal="impact-item-1"
+              className="reveal-up text-center md:px-6 md:border-r md:border-black/10"
+              style={{ transitionDelay: "0.06s" }}
+            >
+              <CountUp value={400} suffix="+" />
+              <p className="mt-3 text-xs uppercase tracking-wider text-black/50">
+                Production commits shipped
+              </p>
             </div>
-            <div className="hidden md:block w-[1px] h-10 bg-white/15"></div>
-            <div className="flex flex-col items-center md:items-start">
-              <CountUp value={250} suffix="+" duration={1200} />
-              <span className="text-[9px] font-mono uppercase tracking-widest text-white/50 mt-2">
-                Problems Solved Across Core Ds And Algo Patterns
-              </span>
+
+            <div
+              data-reveal="impact-item-2"
+              className="reveal-up text-center md:px-6 md:border-r md:border-black/10"
+              style={{ transitionDelay: "0.14s" }}
+            >
+              <CountUp value={250} suffix="+" />
+              <p className="mt-3 text-xs uppercase tracking-wider text-black/50">
+                Core data structures & algorithm problems solved
+              </p>
             </div>
-            <div className="hidden md:block w-[1px] h-10 bg-white/15"></div>
-            <div className="flex flex-col items-center md:items-start">
-              <span className="text-5xl font-semibold text-white mondwest-accent">
-                ↗
-              </span>
-              <span className="text-[9px] font-mono uppercase tracking-widest text-white/50 mt-2">
-                Published on AWS Medium
-              </span>
+
+            <div
+              data-reveal="impact-item-3"
+              className="reveal-up text-center md:px-6 md:border-r md:border-black/10"
+              style={{ transitionDelay: "0.22s" }}
+            >
+              <HoverPeek
+                url="https://medium.com/aws-in-plain-english/how-to-deploy-a-full-stack-app-to-aws-beginner-friendly-devops-guide-f3c3465949c5"
+                isStatic
+                imageSrc="/previews/aws-medium-article.png"
+                enableLensEffect={false}
+              >
+                <a
+                  href="https://medium.com/aws-in-plain-english/how-to-deploy-a-full-stack-app-to-aws-beginner-friendly-devops-guide-f3c3465949c5"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block text-3xl md:text-4xl font-semibold tracking-tight text-primary-ink hover:text-primary-ink/80 transition-colors"
+                >
+                  Published
+                </a>
+              </HoverPeek>
+              <p className="mt-3 text-xs uppercase tracking-wider text-black/50">
+                Technical writing on AWS Medium
+              </p>
             </div>
-            <div className="hidden md:block w-[1px] h-10 bg-white/15"></div>
-            <div className="flex flex-col items-center md:items-start">
-              <span className="text-5xl font-semibold text-white mondwest-accent">
-                ✓
-              </span>
-              <span className="text-[9px] font-mono uppercase tracking-widest text-white/50 mt-2">
-                Microsoft GenAI Certified
-              </span>
+
+            <div
+              data-reveal="impact-item-4"
+              className="reveal-up text-center md:px-6"
+              style={{ transitionDelay: "0.3s" }}
+            >
+              <p className="text-3xl md:text-4xl font-semibold tracking-tight text-primary-ink">
+                Certified
+              </p>
+              <p className="mt-3 text-xs uppercase tracking-wider text-black/50">
+                Microsoft GenAI certified
+              </p>
             </div>
           </div>
         </section>
