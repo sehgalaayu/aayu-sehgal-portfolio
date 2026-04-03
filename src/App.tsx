@@ -347,7 +347,7 @@ export default function App() {
 
           <div
             data-reveal="hero-cta"
-            className="reveal-up flex flex-wrap gap-4"
+            className="reveal-up is-visible md:is-visible-none flex flex-wrap gap-4"
             style={{ transitionDelay: "0.24s" }}
           >
             <GlassButton
