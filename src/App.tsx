@@ -25,6 +25,8 @@ const projects = [
   {
     title: "CAPShield",
     category: "DeFi Platform",
+    description:
+      "Full-stack decentralized finance platform with staking, treasury insights, vesting, governance, wallet data, and analytics.",
     tags: [
       "React",
       "TypeScript",
@@ -45,6 +47,8 @@ const projects = [
   {
     title: "Ethreal Vault",
     category: "Web3 Wallet Application",
+    description:
+      "Web-based crypto wallet that generates a BIP39 seed phrase to derive and manage Ethereum and Solana wallets with private-key visibility controls.",
     tags: [
       "React 19",
       "TypeScript",
@@ -65,6 +69,8 @@ const projects = [
   {
     title: "Private Knowledge Q&A",
     category: "Internal Tooling",
+    description:
+      "Internal knowledge assistant for secure document-grounded Q&A with fast retrieval and production-ready deployment workflows.",
     tags: ["React", "FastAPI", "MongoDB", "Node.js", "Python", "Openrouter"],
     image: "/project-pngs/private-qa.png",
     badge: "LIVE",
@@ -73,6 +79,8 @@ const projects = [
   {
     title: "Product Feedback Platform",
     category: "SaaS Product",
+    description:
+      "Product feedback and roadmap platform with structured prioritization flows, public status updates, and clean SaaS dashboard UX.",
     tags: ["Next.js", "PostgreSQL", "React", "Node.js"],
     image: "/project-pngs/product%20feedbaak.JPG",
     href: "https://product-feedback-webapp-1.onrender.com/",
@@ -80,6 +88,8 @@ const projects = [
   {
     title: "Wanderlust",
     category: "Full-Stack Application",
+    description:
+      "Full-stack travel listing app with media uploads, interactive location mapping, and booking-first discovery experiences.",
     tags: ["Node.js", "MongoDB", "Express", "Cloudinary", "React", "Mapbox"],
     image: "/project-pngs/wanderlust.JPG",
     href: "https://wanderlust-bnb-epe7.onrender.com/",
@@ -87,6 +97,8 @@ const projects = [
   {
     title: "Aajao — India's RSVP App",
     category: "Consumer Startup",
+    description:
+      "Modern RSVP and event engagement experience built for real-time updates, rich interactions, and fast consumer onboarding.",
     tags: ["Redis", "WebSockets", "Next.js", "React", "Framer Motion"],
     image: "/project-pngs/aajao-landing%20page.JPG",
     badge: "NEW RELEASE",
@@ -232,6 +244,8 @@ const orderedProjects = [
 
 const workTestimonials: Array<{
   quote: string;
+  description: string;
+  stack: string[];
   name: string;
   designation: string;
   src: string;
@@ -239,6 +253,8 @@ const workTestimonials: Array<{
   imagePosition: "center" | "top" | "bottom";
 }> = orderedProjects.map((project) => ({
   quote: `Stack: ${project.tags.join(" • ")}`,
+  description: project.description,
+  stack: project.tags,
   name: project.title,
   designation: project.category,
   src: project.image,
@@ -465,7 +481,7 @@ export default function App() {
 
           <div
             data-reveal="work-carousel"
-            className="reveal-up bg-transparent border border-black/5 p-4 sm:p-6 md:p-12 rounded-[1.5rem] md:rounded-[2rem] min-h-[300px] flex flex-wrap gap-4 md:gap-6 items-center justify-center relative"
+            className="reveal-up bg-transparent p-4 sm:p-6 md:p-12 rounded-[1.5rem] md:rounded-[2rem] min-h-[300px] flex flex-wrap gap-4 md:gap-6 items-center justify-center relative"
             style={{ transitionDelay: "0.18s" }}
           >
             <div

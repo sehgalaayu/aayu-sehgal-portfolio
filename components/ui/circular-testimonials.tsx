@@ -12,6 +12,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface Testimonial {
   quote: string;
+  description?: string;
+  stack?: string[];
   name: string;
   designation: string;
   src: string;
@@ -90,9 +92,13 @@ export const CircularTestimonials = ({
     () => testimonials[activeIndex],
     [activeIndex, testimonials],
   );
-  const activeQuoteWords = useMemo(
-    () => activeTestimonial.quote.split(" "),
-    [activeTestimonial.quote],
+  const activeStack = useMemo(
+    () => activeTestimonial.stack ?? [],
+    [activeTestimonial.stack],
+  );
+  const activeDescription = useMemo(
+    () => activeTestimonial.description ?? activeTestimonial.quote,
+    [activeTestimonial.description, activeTestimonial.quote],
   );
 
   useEffect(() => {
@@ -255,31 +261,49 @@ export const CircularTestimonials = ({
   };
 
   return (
-    <div className="testimonial-container" ref={sectionRef}>
-      <div className="testimonial-grid">
-        <div className="image-container" ref={imageContainerRef}>
-          {testimonials.map((testimonial, index) => {
-            const isActiveHovered =
-              index === activeIndex && hoveredIndex === index;
-            const isActiveCard = index === activeIndex;
+    <div className="testimonial-section" ref={sectionRef}>
+      <div className="work-card-shell">
+        <div className="preview-pane" ref={imageContainerRef}>
+          <div className="preview-glow" aria-hidden="true" />
+          <div className="screen-frame" aria-hidden="true">
+            <div className="screen-bar">
+              <span className="dot dot-red" />
+              <span className="dot dot-yellow" />
+              <span className="dot dot-green" />
+            </div>
+          </div>
+          <div className="slides-viewport">
+            {testimonials.map((testimonial, index) => {
+              const isActiveHovered =
+                index === activeIndex && hoveredIndex === index;
+              const isActiveCard = index === activeIndex;
 
-            return (
-              <div
-                key={testimonial.src}
-                className={`testimonial-media ${isActiveCard ? "is-active" : ""}`}
-                data-index={index}
-                style={getImageStyle(index)}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-              >
-                {testimonial.href ? (
-                  <a
-                    href={testimonial.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`Open ${testimonial.name}`}
-                    className="media-link"
-                  >
+              return (
+                <div
+                  key={testimonial.src}
+                  className={`testimonial-media ${isActiveCard ? "is-active" : ""}`}
+                  data-index={index}
+                  style={getImageStyle(index)}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                >
+                  {testimonial.href ? (
+                    <a
+                      href={testimonial.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`Open ${testimonial.name}`}
+                      className="media-link"
+                    >
+                      <img
+                        src={testimonial.src}
+                        alt={testimonial.name}
+                        className={`testimonial-image ${testimonial.imagePosition === "top" ? "focus-top" : testimonial.imagePosition === "bottom" ? "focus-bottom" : "focus-center"}`}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                  ) : (
                     <img
                       src={testimonial.src}
                       alt={testimonial.name}
@@ -287,26 +311,18 @@ export const CircularTestimonials = ({
                       loading="lazy"
                       decoding="async"
                     />
-                  </a>
-                ) : (
-                  <img
-                    src={testimonial.src}
-                    alt={testimonial.name}
-                    className={`testimonial-image ${testimonial.imagePosition === "top" ? "focus-top" : testimonial.imagePosition === "bottom" ? "focus-bottom" : "focus-center"}`}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                )}
+                  )}
 
-                <div
-                  className={`light-sweep ${isActiveHovered ? "is-hovered" : ""}`}
-                />
-              </div>
-            );
-          })}
+                  <div
+                    className={`light-sweep ${isActiveHovered ? "is-hovered" : ""}`}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        <div className="testimonial-content">
+        <div className="info-pane">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
@@ -315,100 +331,205 @@ export const CircularTestimonials = ({
               animate="animate"
               exit="exit"
               transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="info-pane-body"
             >
-              <h3
-                className="name"
-                style={{ color: colorName, fontSize: fontSizeName }}
-              >
-                {activeTestimonial.name}
-              </h3>
-              <p
-                className="designation"
-                style={{
-                  color: colorDesignation,
-                  fontSize: fontSizeDesignation,
-                }}
-              >
-                {activeTestimonial.designation}
-              </p>
-              {activeTestimonial.href && (
-                <a
-                  href={activeTestimonial.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="project-link"
+              <div className="project-top">
+                <div className="project-meta-row">
+                  <span className="project-index">
+                    {String(activeIndex + 1).padStart(2, "0")} /{" "}
+                    {String(testimonialsLength).padStart(2, "0")}
+                  </span>
+                  <span className="project-type">
+                    {activeTestimonial.designation}
+                  </span>
+                </div>
+
+                <h3
+                  className="project-name"
+                  style={{ color: colorName, fontSize: fontSizeName }}
                 >
-                  Open project
-                </a>
-              )}
-              <motion.p
-                className="quote"
-                style={{ color: colorTestimony, fontSize: fontSizeQuote }}
-              >
-                {activeQuoteWords.map((word, i) => (
-                  <motion.span
-                    key={i}
-                    initial={{ filter: "blur(10px)", opacity: 0, y: 5 }}
-                    animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.22,
-                      ease: "easeInOut",
-                      delay: 0.025 * i,
-                    }}
-                    style={{ display: "inline-block" }}
-                  >
-                    {word}&nbsp;
-                  </motion.span>
-                ))}
-              </motion.p>
+                  {activeTestimonial.name}
+                </h3>
+
+                <p
+                  className="project-desc"
+                  style={{
+                    color: colorDesignation,
+                    fontSize: fontSizeDesignation,
+                  }}
+                >
+                  {activeDescription}
+                </p>
+              </div>
+
+              <div className="stack-section">
+                <p className="stack-label">STACK</p>
+                <div
+                  className="stack-tags"
+                  role="list"
+                  aria-label="Project stack"
+                >
+                  {activeStack.slice(0, 10).map((item, idx) => (
+                    <span
+                      key={`${activeTestimonial.name}-${item}`}
+                      role="listitem"
+                      className={`stack-tag ${idx < 3 ? "is-highlight" : ""}`}
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </motion.div>
           </AnimatePresence>
 
-          <div className="arrow-buttons">
-            <button
-              className="arrow-button prev-button"
-              onClick={handlePrev}
-              style={{
-                backgroundColor: hoverPrev ? colorArrowHoverBg : colorArrowBg,
-              }}
-              onMouseEnter={() => setHoverPrev(true)}
-              onMouseLeave={() => setHoverPrev(false)}
-              aria-label="Previous testimonial"
-            >
-              <FaArrowLeft size={13} color={colorArrowFg} />
-            </button>
-            <button
-              className="arrow-button next-button"
-              onClick={handleNext}
-              style={{
-                backgroundColor: hoverNext ? colorArrowHoverBg : colorArrowBg,
-              }}
-              onMouseEnter={() => setHoverNext(true)}
-              onMouseLeave={() => setHoverNext(false)}
-              aria-label="Next testimonial"
-            >
-              <FaArrowRight size={13} color={colorArrowFg} />
-            </button>
+          <div className="card-footer">
+            {activeTestimonial.href ? (
+              <a
+                href={activeTestimonial.href}
+                target="_blank"
+                rel="noreferrer"
+                className="open-btn"
+              >
+                Open project <span className="arrow-up">↗</span>
+              </a>
+            ) : (
+              <span className="open-btn disabled">Open project</span>
+            )}
+
+            <div className="footer-controls">
+              <div className="dot-nav-wrap" aria-hidden="true">
+                {testimonials.map((_, idx) => (
+                  <span
+                    key={`dot-${idx}`}
+                    className={`dot-nav ${idx === activeIndex ? "is-active" : ""}`}
+                  />
+                ))}
+              </div>
+              <div className="arrow-buttons">
+                <button
+                  className="arrow-button prev-button"
+                  onClick={handlePrev}
+                  style={{
+                    backgroundColor: hoverPrev
+                      ? colorArrowHoverBg
+                      : colorArrowBg,
+                  }}
+                  onMouseEnter={() => setHoverPrev(true)}
+                  onMouseLeave={() => setHoverPrev(false)}
+                  aria-label="Previous testimonial"
+                >
+                  <FaArrowLeft size={12} color={colorArrowFg} />
+                </button>
+                <button
+                  className="arrow-button next-button"
+                  onClick={handleNext}
+                  style={{
+                    backgroundColor: hoverNext
+                      ? colorArrowHoverBg
+                      : colorArrowBg,
+                  }}
+                  onMouseEnter={() => setHoverNext(true)}
+                  onMouseLeave={() => setHoverNext(false)}
+                  aria-label="Next testimonial"
+                >
+                  <FaArrowRight size={12} color={colorArrowFg} />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <style>{`
-        .testimonial-container {
+        .testimonial-section {
           width: 100%;
-          max-width: 56rem;
-          padding: 1rem;
+          overflow: hidden;
         }
-        .testimonial-grid {
+
+        .work-card-shell {
           display: grid;
-          gap: 2rem;
+          grid-template-columns: 1fr;
+          min-height: 420px;
+          border: 1px solid rgba(5, 26, 36, 0.12);
+          border-radius: 1.75rem;
+          overflow: hidden;
+          background: linear-gradient(180deg, #ffffff, #f7f9fb);
+          box-shadow: 0 18px 44px rgba(3, 15, 23, 0.08);
         }
-        .image-container {
+
+        .preview-pane {
           position: relative;
           width: 100%;
-          height: 17rem;
+          min-height: 21rem;
           perspective: 1000px;
+          background-color: #0d0d12;
+          overflow: hidden;
+          -webkit-clip-path: inset(0);
+          clip-path: inset(0);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 1.2rem;
         }
+
+        .slides-viewport {
+          position: absolute;
+          top: 2.3rem;
+          left: 1.2rem;
+          width: calc(100% - 2.4rem);
+          height: calc(100% - 3.7rem);
+          max-width: calc(100% - 2.4rem);
+          overflow: hidden;
+          border-radius: 1.5rem;
+        }
+
+        .preview-glow {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(ellipse at 40% 62%, rgba(66, 160, 255, 0.18) 0%, transparent 70%);
+        }
+
+        .screen-frame {
+          position: absolute;
+          top: 1rem;
+          left: 1rem;
+          right: 1rem;
+          height: 2rem;
+          border-radius: 0.7rem;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: rgba(0, 0, 0, 0.24);
+          pointer-events: none;
+        }
+
+        .screen-bar {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          padding: 0 0.75rem;
+          gap: 0.34rem;
+        }
+
+        .dot {
+          width: 0.43rem;
+          height: 0.43rem;
+          border-radius: 999px;
+        }
+
+        .dot-red {
+          background: #ff5f57;
+        }
+
+        .dot-yellow {
+          background: #febc2e;
+        }
+
+        .dot-green {
+          background: #28c840;
+        }
+
         .testimonial-image {
           width: 100%;
           height: 100%;
@@ -428,10 +549,10 @@ export const CircularTestimonials = ({
         }
         .testimonial-media {
           position: absolute;
-          width: 100%;
-          height: 100%;
+          inset: 0;
           border-radius: 1.5rem;
           overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .testimonial-media.is-active::after {
           content: "";
@@ -501,39 +622,173 @@ export const CircularTestimonials = ({
             opacity: 0;
           }
         }
-        .testimonial-content {
+        .info-pane {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          padding: 1.2rem;
+          background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
         }
-        .name {
-          font-weight: bold;
-          margin-bottom: 0.25rem;
+
+        .info-pane-body {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          flex: 1;
+          min-height: 0;
         }
-        .designation {
-          margin-bottom: 1rem;
+
+        .project-top {
+          display: flex;
+          flex-direction: column;
         }
-        .project-link {
-          display: inline-flex;
-          margin-bottom: 1rem;
-          text-decoration: underline;
-          text-underline-offset: 4px;
-          color: inherit;
+
+        .project-meta-row {
+          display: flex;
+          align-items: center;
+          gap: 0.55rem;
+          margin-bottom: 0.9rem;
+        }
+
+        .project-index {
+          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-size: 0.66rem;
+          letter-spacing: 0.09em;
+          color: rgba(5, 26, 36, 0.46);
+        }
+
+        .project-type {
+          font-size: 0.66rem;
+          color: rgba(5, 26, 36, 0.58);
+          border: 1px solid rgba(5, 26, 36, 0.16);
+          border-radius: 999px;
+          padding: 0.2rem 0.48rem;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+
+        .project-name {
           font-weight: 600;
+          margin-bottom: 0.5rem;
+          letter-spacing: -0.02em;
         }
-        .quote {
-          line-height: 1.65;
+
+        .project-desc {
+          line-height: 1.6;
+          margin-bottom: 1rem;
         }
+
+        .stack-section {
+          margin-top: 1rem;
+          margin-bottom: 0.95rem;
+        }
+
+        .stack-label {
+          font-size: 0.62rem;
+          letter-spacing: 0.12em;
+          color: rgba(5, 26, 36, 0.45);
+          text-transform: uppercase;
+          margin-bottom: 0.52rem;
+        }
+
+        .stack-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.34rem;
+        }
+
+        .stack-tag {
+          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-size: 0.7rem;
+          line-height: 1;
+          padding: 0.36rem 0.58rem;
+          border-radius: 999px;
+          border: 1px solid rgba(5, 26, 36, 0.14);
+          color: rgba(5, 26, 36, 0.72);
+          background: rgba(5, 26, 36, 0.03);
+        }
+
+        .stack-tag.is-highlight {
+          border-color: rgba(50, 43, 141, 0.38);
+          color: #312c84;
+          background: #efeeff;
+        }
+
+        .card-footer {
+          margin-top: auto;
+          padding-top: 0.88rem;
+          border-top: 1px solid rgba(5, 26, 36, 0.08);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 0.8rem;
+        }
+
+        .open-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          text-decoration: none;
+          color: #051a24;
+          font-size: 0.78rem;
+          font-weight: 600;
+          padding: 0.45rem 0.78rem;
+          border: 1px solid rgba(5, 26, 36, 0.2);
+          border-radius: 0.72rem;
+          transition: background-color 180ms ease;
+          white-space: nowrap;
+        }
+
+        .open-btn:hover {
+          background: rgba(5, 26, 36, 0.05);
+        }
+
+        .open-btn.disabled {
+          opacity: 0.6;
+          pointer-events: none;
+        }
+
+        .arrow-up {
+          font-size: 0.9rem;
+          line-height: 1;
+        }
+
+        .footer-controls {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+        }
+
+        .dot-nav-wrap {
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+        }
+
+        .dot-nav {
+          width: 0.34rem;
+          height: 0.34rem;
+          border-radius: 999px;
+          background: rgba(5, 26, 36, 0.26);
+          transition: width 220ms ease, background-color 220ms ease;
+        }
+
+        .dot-nav.is-active {
+          width: 0.95rem;
+          background: rgba(5, 26, 36, 0.72);
+          border-radius: 999px;
+        }
+
         .arrow-buttons {
           display: flex;
-          gap: 0.5rem;
-          padding-top: 1.1rem;
+          gap: 0.4rem;
+          padding-top: 0;
           align-items: center;
           opacity: 0.9;
         }
         .arrow-button {
-          width: 2.1rem;
-          height: 2.1rem;
+          width: 1.95rem;
+          height: 1.95rem;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -558,25 +813,103 @@ export const CircularTestimonials = ({
           outline: 2px solid rgba(0, 166, 251, 0.55);
           outline-offset: 2px;
         }
+        @media (max-width: 767px) {
+          .work-card-shell {
+            min-height: 0;
+          }
+
+          .preview-pane {
+            min-height: 16.5rem;
+            padding: 0.9rem;
+          }
+
+          .screen-frame {
+            top: 0.8rem;
+            left: 0.9rem;
+            right: 0.9rem;
+            height: 1.75rem;
+          }
+
+          .slides-viewport {
+            top: 2rem;
+            left: 0.9rem;
+            width: calc(100% - 1.8rem);
+            height: calc(100% - 2.9rem);
+            max-width: calc(100% - 1.8rem);
+          }
+
+          .info-pane {
+            padding: 1rem;
+          }
+
+          .project-meta-row {
+            margin-bottom: 0.7rem;
+          }
+
+          .project-name {
+            margin-bottom: 0.4rem;
+          }
+
+          .project-desc {
+            margin-bottom: 0.75rem;
+          }
+
+          .stack-section {
+            margin-top: 0.7rem;
+            margin-bottom: 0.8rem;
+          }
+
+          .card-footer {
+            padding-top: 0.7rem;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+          }
+
+          .footer-controls {
+            width: 100%;
+            justify-content: flex-end;
+          }
+        }
         @media (min-width: 768px) {
-          .testimonial-container {
-            padding: 2rem;
+          .work-card-shell {
+            grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+            column-gap: 0.8rem;
           }
-          .testimonial-grid {
-            grid-template-columns: 1fr 1fr;
-            gap: 5rem;
+
+          .preview-pane {
+            min-height: 25.5rem;
+            padding: 1.5rem;
+            border-bottom: 0;
+            border-right: 0;
           }
-          .image-container {
-            height: 24rem;
+
+          .screen-frame {
+            left: 1.2rem;
+            right: 1.2rem;
           }
-          .designation {
-            margin-bottom: 2rem;
+
+          .slides-viewport {
+            top: 2.8rem;
+            left: 1.5rem;
+            width: calc(100% - 3rem);
+            height: calc(100% - 4.4rem);
+            max-width: calc(100% - 3rem);
           }
+
+          .info-pane {
+            padding: 1.9rem;
+          }
+
+          .project-name {
+            margin-bottom: 0.62rem;
+          }
+
+          .project-desc {
+            margin-bottom: 1.15rem;
+          }
+
           .quote {
-            line-height: 1.75;
-          }
-          .arrow-buttons {
-            padding-top: 0;
+            font-size: 0.88rem;
           }
         }
       `}</style>
