@@ -7,7 +7,17 @@ export const containerVariants: Variants = {
   visible: {
     transition: {
       staggerChildren: 0.08,
-      delayChildren: 0.2,
+      delayChildren: 0.12,
+    },
+  },
+};
+
+export const quoteContainerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.15,
     },
   },
 };
@@ -23,7 +33,7 @@ export const blurFadeVariants: Variants = {
     filter: "blur(0px)",
     y: 0,
     transition: {
-      duration: 1,
+      duration: 0.72,
       ease: premiumEase,
     },
   },

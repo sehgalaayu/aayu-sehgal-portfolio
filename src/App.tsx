@@ -5,7 +5,11 @@ import { HoverPeek } from "@/components/ui/link-preview";
 import { LogoCloud } from "@/components/ui/logo-cloud-3";
 import { Navbar1 } from "@/components/ui/navbar-1";
 import { SpotlightCursor } from "@/components/ui/spotlight-cursor";
-import { blurFadeVariants, containerVariants } from "@/lib/animations";
+import {
+  blurFadeVariants,
+  containerVariants,
+  quoteContainerVariants,
+} from "@/lib/animations";
 import { motion } from "framer-motion";
 import {
   ArrowUpRight,
@@ -18,6 +22,46 @@ import {
 } from "lucide-react";
 
 const projects = [
+  {
+    title: "CAPShield",
+    category: "DeFi Platform",
+    tags: [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Tailwind",
+      "shadcn/ui",
+      "Framer Motion",
+      "Node.js",
+      "Express",
+      "Ethers",
+      "Docker",
+      "Nginx",
+    ],
+    image: "/project-pngs/capshield-decentralised.JPG",
+    badge: "LIVE",
+    href: "https://capshield-frontend.onrender.com/",
+  },
+  {
+    title: "Ethreal Vault",
+    category: "Web3 Wallet Application",
+    tags: [
+      "React 19",
+      "TypeScript",
+      "Vite 7",
+      "Tailwind CSS 4",
+      "Ethers",
+      "@solana/web3.js",
+      "bip39",
+      "bip32",
+      "Radix UI",
+      "Framer Motion",
+      "ESLint",
+    ],
+    image: "/project-pngs/ethreal-vault.JPG",
+    badge: "LIVE",
+    href: "https://web-based-wallet-32bt.vercel.app/",
+  },
   {
     title: "Private Knowledge Q&A",
     category: "Internal Tooling",
@@ -199,13 +243,18 @@ const workTestimonials: Array<{
   designation: project.category,
   src: project.image,
   href: project.href,
-  imagePosition: project.title.includes("Private Knowledge")
-    ? "top"
-    : project.title.includes("Airbnb")
+  imagePosition:
+    project.title === "CAPShield"
       ? "center"
-      : project.title.includes("Aajao")
-        ? "top"
-        : "center",
+      : project.title === "Ethreal Vault"
+        ? "center"
+        : project.title.includes("Private Knowledge")
+          ? "top"
+          : project.title.includes("Airbnb")
+            ? "center"
+            : project.title.includes("Aajao")
+              ? "top"
+              : "center",
 }));
 
 function CountUp({
@@ -460,10 +509,10 @@ export default function App() {
           <Quote className="w-10 h-10 md:w-12 md:h-12 text-white/15 mx-auto mb-8 md:mb-10" />
           <motion.blockquote
             className="text-xl md:text-3xl lg:text-4xl font-serif text-white leading-snug mb-12 md:mb-16 italic space-y-3 md:space-y-4"
-            variants={containerVariants}
+            variants={quoteContainerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-50px" }}
           >
             {quoteLines.map((line, idx) => (
               <motion.span
