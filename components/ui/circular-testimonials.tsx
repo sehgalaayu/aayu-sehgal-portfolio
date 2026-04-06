@@ -265,45 +265,28 @@ export const CircularTestimonials = ({
       <div className="work-card-shell">
         <div className="preview-pane" ref={imageContainerRef}>
           <div className="preview-glow" aria-hidden="true" />
-          <div className="screen-frame" aria-hidden="true">
-            <div className="screen-bar">
-              <span className="dot dot-red" />
-              <span className="dot dot-yellow" />
-              <span className="dot dot-green" />
-            </div>
-          </div>
-          <div className="slides-viewport">
-            {testimonials.map((testimonial, index) => {
-              const isActiveHovered =
-                index === activeIndex && hoveredIndex === index;
-              const isActiveCard = index === activeIndex;
+          {testimonials.map((testimonial, index) => {
+            const isActiveHovered =
+              index === activeIndex && hoveredIndex === index;
+            const isActiveCard = index === activeIndex;
 
-              return (
-                <div
-                  key={testimonial.src}
-                  className={`testimonial-media ${isActiveCard ? "is-active" : ""}`}
-                  data-index={index}
-                  style={getImageStyle(index)}
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                >
-                  {testimonial.href ? (
-                    <a
-                      href={testimonial.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`Open ${testimonial.name}`}
-                      className="media-link"
-                    >
-                      <img
-                        src={testimonial.src}
-                        alt={testimonial.name}
-                        className={`testimonial-image ${testimonial.imagePosition === "top" ? "focus-top" : testimonial.imagePosition === "bottom" ? "focus-bottom" : "focus-center"}`}
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </a>
-                  ) : (
+            return (
+              <div
+                key={testimonial.src}
+                className={`testimonial-media ${isActiveCard ? "is-active" : ""}`}
+                data-index={index}
+                style={getImageStyle(index)}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+              >
+                {testimonial.href ? (
+                  <a
+                    href={testimonial.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Open ${testimonial.name}`}
+                    className="media-link"
+                  >
                     <img
                       src={testimonial.src}
                       alt={testimonial.name}
@@ -311,15 +294,23 @@ export const CircularTestimonials = ({
                       loading="lazy"
                       decoding="async"
                     />
-                  )}
-
-                  <div
-                    className={`light-sweep ${isActiveHovered ? "is-hovered" : ""}`}
+                  </a>
+                ) : (
+                  <img
+                    src={testimonial.src}
+                    alt={testimonial.name}
+                    className={`testimonial-image ${testimonial.imagePosition === "top" ? "focus-top" : testimonial.imagePosition === "bottom" ? "focus-bottom" : "focus-center"}`}
+                    loading="lazy"
+                    decoding="async"
                   />
-                </div>
-              );
-            })}
-          </div>
+                )}
+
+                <div
+                  className={`light-sweep ${isActiveHovered ? "is-hovered" : ""}`}
+                />
+              </div>
+            );
+          })}
         </div>
 
         <div className="info-pane">
@@ -452,8 +443,10 @@ export const CircularTestimonials = ({
           grid-template-columns: 1fr;
           min-height: 420px;
           border: 1px solid rgba(5, 26, 36, 0.12);
-          border-radius: 1.75rem;
+          border-radius: 16px;
           overflow: hidden;
+          -webkit-clip-path: inset(0 round 16px);
+          clip-path: inset(0 round 16px);
           background: linear-gradient(180deg, #ffffff, #f7f9fb);
           box-shadow: 0 18px 44px rgba(3, 15, 23, 0.08);
         }
@@ -463,7 +456,9 @@ export const CircularTestimonials = ({
           width: 100%;
           min-height: 21rem;
           perspective: 1000px;
-          background-color: #0d0d12;
+          background-color: transparent;
+          border-top-left-radius: 16px;
+          border-top-right-radius: 16px;
           overflow: hidden;
           -webkit-clip-path: inset(0);
           clip-path: inset(0);
@@ -474,60 +469,11 @@ export const CircularTestimonials = ({
           padding: 1.2rem;
         }
 
-        .slides-viewport {
-          position: absolute;
-          top: 2.3rem;
-          left: 1.2rem;
-          width: calc(100% - 2.4rem);
-          height: calc(100% - 3.7rem);
-          max-width: calc(100% - 2.4rem);
-          overflow: hidden;
-          border-radius: 1.5rem;
-        }
-
         .preview-glow {
           position: absolute;
           inset: 0;
           pointer-events: none;
           background: radial-gradient(ellipse at 40% 62%, rgba(66, 160, 255, 0.18) 0%, transparent 70%);
-        }
-
-        .screen-frame {
-          position: absolute;
-          top: 1rem;
-          left: 1rem;
-          right: 1rem;
-          height: 2rem;
-          border-radius: 0.7rem;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          background: rgba(0, 0, 0, 0.24);
-          pointer-events: none;
-        }
-
-        .screen-bar {
-          height: 100%;
-          display: flex;
-          align-items: center;
-          padding: 0 0.75rem;
-          gap: 0.34rem;
-        }
-
-        .dot {
-          width: 0.43rem;
-          height: 0.43rem;
-          border-radius: 999px;
-        }
-
-        .dot-red {
-          background: #ff5f57;
-        }
-
-        .dot-yellow {
-          background: #febc2e;
-        }
-
-        .dot-green {
-          background: #28c840;
         }
 
         .testimonial-image {
@@ -549,7 +495,9 @@ export const CircularTestimonials = ({
         }
         .testimonial-media {
           position: absolute;
-          inset: 0;
+          width: calc(100% - 2.4rem);
+          height: calc(100% - 3.7rem);
+          top: 2.3rem;
           border-radius: 1.5rem;
           overflow: hidden;
           border: 1px solid rgba(255, 255, 255, 0.08);
@@ -627,6 +575,8 @@ export const CircularTestimonials = ({
           flex-direction: column;
           justify-content: space-between;
           padding: 1.2rem;
+          border-bottom-left-radius: 16px;
+          border-bottom-right-radius: 16px;
           background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
         }
 
@@ -816,26 +766,14 @@ export const CircularTestimonials = ({
         @media (max-width: 767px) {
           .work-card-shell {
             min-height: 0;
+            border: 1px solid rgba(5, 26, 36, 0.12);
+            border-radius: 16px;
+            overflow: hidden;
           }
 
           .preview-pane {
             min-height: 16.5rem;
             padding: 0.9rem;
-          }
-
-          .screen-frame {
-            top: 0.8rem;
-            left: 0.9rem;
-            right: 0.9rem;
-            height: 1.75rem;
-          }
-
-          .slides-viewport {
-            top: 2rem;
-            left: 0.9rem;
-            width: calc(100% - 1.8rem);
-            height: calc(100% - 2.9rem);
-            max-width: calc(100% - 1.8rem);
           }
 
           .info-pane {
@@ -874,30 +812,29 @@ export const CircularTestimonials = ({
           .work-card-shell {
             grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
             column-gap: 0.8rem;
+            border-radius: 16px;
+            overflow: hidden;
           }
 
           .preview-pane {
             min-height: 25.5rem;
             padding: 1.5rem;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 16px;
             border-bottom: 0;
             border-right: 0;
           }
 
-          .screen-frame {
-            left: 1.2rem;
-            right: 1.2rem;
-          }
-
-          .slides-viewport {
-            top: 2.8rem;
-            left: 1.5rem;
+          .testimonial-media {
             width: calc(100% - 3rem);
             height: calc(100% - 4.4rem);
-            max-width: calc(100% - 3rem);
+            top: 2.8rem;
           }
 
           .info-pane {
             padding: 1.9rem;
+            border-bottom-left-radius: 0;
+            border-top-right-radius: 16px;
           }
 
           .project-name {

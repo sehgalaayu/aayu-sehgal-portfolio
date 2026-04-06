@@ -481,7 +481,7 @@ export default function App() {
 
           <div
             data-reveal="work-carousel"
-            className="reveal-up bg-transparent p-4 sm:p-6 md:p-12 rounded-[1.5rem] md:rounded-[2rem] min-h-[300px] flex flex-wrap gap-4 md:gap-6 items-center justify-center relative"
+            className="reveal-up bg-transparent w-full max-w-[1200px] mx-auto px-8 py-4 sm:py-6 md:py-12 rounded-[1.5rem] md:rounded-[2rem] min-h-[300px] flex flex-wrap gap-4 md:gap-6 items-center justify-center relative"
             style={{ transitionDelay: "0.18s" }}
           >
             <div
