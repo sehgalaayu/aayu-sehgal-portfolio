@@ -23,6 +23,25 @@ import {
 
 const projects = [
   {
+    title: "WealthSense",
+    category: "Investment Tool",
+    description:
+      "A professional investment tool for Indian retail investors to optimize Mutual Fund portfolios (switching to Direct plans), track 'commission drain,' and compare post-tax Fixed Deposit returns with inflation-adjusted projections.",
+    tags: [
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS 4",
+      "Recharts",
+      "Framer Motion",
+      "Supabase",
+      "AMFI API",
+      "Vercel",
+    ],
+    image: "/project-pngs/wealthsense.JPG",
+    badge: "NEW",
+    href: "#",
+  },
+  {
     title: "CAPShield",
     category: "DeFi Platform",
     description:
@@ -134,6 +153,8 @@ const stack = {
     "Claude",
     "Cursor",
     "Antigravity",
+    "Supabase",
+    "Recharts",
     "MCP",
     "Figma",
     "Metamask",
@@ -238,8 +259,11 @@ const quoteLines = [
 ];
 
 const orderedProjects = [
+  ...projects.filter((project) => project.title === "WealthSense"),
   ...projects.filter((project) => project.title.includes("Aajao")),
-  ...projects.filter((project) => !project.title.includes("Aajao")),
+  ...projects.filter(
+    (project) => project.title !== "WealthSense" && !project.title.includes("Aajao"),
+  ),
 ];
 
 const workTestimonials: Array<{
@@ -260,17 +284,19 @@ const workTestimonials: Array<{
   src: project.image,
   href: project.href,
   imagePosition:
-    project.title === "CAPShield"
-      ? "center"
-      : project.title === "Ethreal Vault"
+    project.title === "WealthSense"
+      ? "top"
+      : project.title === "CAPShield"
         ? "center"
-        : project.title.includes("Private Knowledge")
-          ? "top"
-          : project.title.includes("Airbnb")
-            ? "center"
-            : project.title.includes("Aajao")
-              ? "top"
-              : "center",
+        : project.title === "Ethreal Vault"
+          ? "center"
+          : project.title.includes("Private Knowledge")
+            ? "top"
+            : project.title.includes("Airbnb")
+              ? "center"
+              : project.title.includes("Aajao")
+                ? "top"
+                : "center",
 }));
 
 function CountUp({
@@ -401,7 +427,7 @@ export default function App() {
             animate="visible"
           >
             <span className="font-mono text-[10px] tracking-[0.3em] text-primary-ink/60 mb-8 uppercase block">
-              Full-Stack Developer — Building products people actually use
+              AI - Full-Stack Developer — Building products people actually use
             </span>
             <motion.h1
               variants={blurFadeVariants}
@@ -417,7 +443,7 @@ export default function App() {
               <p>
                 I am a{" "}
                 <span className="editorial-accent font-normal text-primary-ink">
-                  Full-Stack
+                  AI - Full-Stack
                 </span>{" "}
                 developer focused on shipping production-ready code that solves
                 real problems. My philosophy centers on speed of execution
