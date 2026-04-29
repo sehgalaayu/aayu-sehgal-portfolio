@@ -39,7 +39,7 @@ const projects = [
     ],
     image: "/project-pngs/wealthsense.JPG",
     badge: "NEW",
-    href: "#",
+    href: "https://yieldsense-five.vercel.app/",
   },
   {
     title: "CAPShield",
